@@ -46,6 +46,41 @@ app.post('/sign-up', async(req, res) => {
     }
 })
 
+app.post('/sign-in', async(req, res) => {
+    let client = await pool.connect();
+    try
+    {
+        const {email, password} = req.body;
+        const user_query = ` SELECT * FROM authenticate WHERE email='${email}' AND password=MD5('${password}')`;
+        const result = await client.query(user_query);
+        if(result.rowCount!=0)
+        {
+            const user_data_query = `SELECT * FROM users WHERE email='${email}'`;
+            const user_data = await client.query(user_data_query);
+            res.status(200).send(user_data.rows[0]);
+        }
+    } catch(e) {
+        throw("error while fetching data", e);
+    }
+    finally{
+        client.release();
+    }
+})
+
+app.put('/score-increment/:id', async(req, res) => {
+    let client = await pool.connect();
+    try{
+        const { id } = req.params;
+        const sql_query = `UPDATE users SET entries=entries+1 WHERE id=${id} RETURNING *`
+        const result = await client.query(sql_query);
+        res.status(200).send(result.rows[0]);
+    } catch(e){
+        throw("failed to increment entries", e);
+    }
+    finally{
+        client.release();
+    }
+})
 
 app.listen(3000, ()=> {
     console.log('app is running on port 3000');
