@@ -1,0 +1,11 @@
+{
+    "defaultEnv": "pg",
+    "pg": {
+        "driver": "pg",
+        "user": "postgres",
+        "password": "password",
+        "host": "127.0.0.1",
+        "database": "fr",
+        "port": "5432"
+    }
+}
