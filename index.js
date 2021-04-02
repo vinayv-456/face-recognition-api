@@ -2,10 +2,13 @@ const express = require('express');
 
 const app = express();
 
+var cors = require('cors')
 const { pool } = require('./connection');
 
 const bodyParser = require('body-parser');
+
 app.use(bodyParser.json());
+app.use(cors())
 
 
 app.get('/users', async (req, res) => {
@@ -82,7 +85,7 @@ app.put('/score-increment/:id', async(req, res) => {
     }
 })
 
-app.listen(3000, ()=> {
+app.listen(4000, ()=> {
     console.log('app is running on port 3000');
 })
   
